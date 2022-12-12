@@ -1,35 +1,20 @@
-.PHONY : ctest test clean all
+.PHONY : test ctest clean all
 
 CC=clang++
-CFLAGS= -c -Wall -Wextra
-OBJECTS = main.o
-
-#-----
-PROG_EXECUTABLE=prog
-
-all: program run clean-objects
-
-program: $(OBJECTS)
-	@$(CC) $(OBJECTS) -o $(PROG_EXECUTABLE)
-
-run: $(PROG_EXECUTABLE) 
-	@./$(PROG_EXECUTABLE)
-
-%.o: %.cpp
-	@$(CC) $(CFLAGS) $<
+CFLAGS=  -c -Wall -Wextra -std=c++2a -pthread 
 
 #-----
 TESTDIR=test/
 
-test: testenv run-test clean-objects
+ctest: testenv run-test clean-objects
 
 testenv: driver.o
 	@$(CC) driver.o -o dout
 
 driver.o: $(TESTDIR)driver.cpp
 	@$(CC) $(CFLAGS) $(TESTDIR)driver.cpp
-
-ctest: test clean
+ 
+test: ctest clean
 
 run-test: dout
 	@./dout
